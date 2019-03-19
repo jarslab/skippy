@@ -6,9 +6,9 @@ import org.skipta.skipta.api.ThrowableMapper;
 
 import static java.util.Objects.requireNonNull;
 
-class DefaultExceptionMapper implements ExceptionMapper
+public class DefaultExceptionMapper implements ExceptionMapper
 {
-    final static ExceptionMapper EMPTY_MAPPER = new DefaultExceptionMapper(new EmptyThrowableMapper());
+    public final static ExceptionMapper EMPTY_MAPPER = new DefaultExceptionMapper(new EmptyThrowableMapper());
 
     private final ThrowableMapper throwableMapper;
 

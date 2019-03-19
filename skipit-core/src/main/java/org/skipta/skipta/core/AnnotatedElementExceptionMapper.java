@@ -12,29 +12,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-class AnnotatedElementExceptionMapper implements ExceptionMapper
+class AnnotatedElementExceptionMapper implements CombinedExceptionMapper
 {
     private final List<ExceptionMapper> exceptionMappers;
 
     AnnotatedElementExceptionMapper(final AnnotatedElement annotatedElement)
     {
-        this.exceptionMappers = createExceptionMappers(annotatedElement);
+        exceptionMappers = createExceptionMappers(annotatedElement);
     }
 
     @Override
-    public ErrorDetails apply(final Throwable throwable)
+    public List<ExceptionMapper> getMappers()
     {
-        return exceptionMappers.stream()
-                .filter(exceptionMapper -> exceptionMapper.test(throwable))
-                .findFirst()
-                .orElse(DefaultExceptionMapper.EMPTY_MAPPER)
-                .apply(throwable);
-    }
-
-    @Override
-    public boolean test(final Throwable throwable)
-    {
-        return exceptionMappers.stream().anyMatch(exceptionMapper -> exceptionMapper.test(throwable));
+        return exceptionMappers;
     }
 
     private List<ExceptionMapper> createExceptionMappers(final AnnotatedElement annotatedElement)

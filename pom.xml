@@ -9,6 +9,7 @@
     <modules>
         <module>skipit-api</module>
         <module>skipit-core</module>
+        <module>skipit-http</module>
     </modules>
 
     <properties>
