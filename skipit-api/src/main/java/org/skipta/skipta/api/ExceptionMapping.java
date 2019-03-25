@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Repeatable(value = ExceptionMappings.class)
 public @interface ExceptionMapping
 {
-    Class<? extends Throwable> exception() default EmptyException.class;
+    Class<? extends Throwable>[] exception() default EmptyException.class;
 
     Class<? extends ErrorDetails> errorDetails() default EmptyErrorDetails.class;
 

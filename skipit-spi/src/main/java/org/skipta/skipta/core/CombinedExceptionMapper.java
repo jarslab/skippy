@@ -22,5 +22,11 @@ public interface CombinedExceptionMapper extends ExceptionMapper
         return getMappers().stream().anyMatch(exceptionMapper -> exceptionMapper.test(throwable));
     }
 
+    @Override
+    default boolean isEmpty()
+    {
+        return getMappers().isEmpty();
+    }
+
     List<ExceptionMapper> getMappers();
 }

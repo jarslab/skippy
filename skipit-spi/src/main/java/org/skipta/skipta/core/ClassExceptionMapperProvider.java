@@ -10,8 +10,8 @@ import java.util.stream.Stream;
 
 public class ClassExceptionMapperProvider
 {
-    private final Map<Class, CombinedExceptionMapper> classesMapper;
-    private final Map<Method, CombinedExceptionMapper> methodsMappers;
+    private final Map<Class, ExceptionMapper> classesMapper;
+    private final Map<Method, ExceptionMapper> methodsMappers;
 
     public ClassExceptionMapperProvider(final Collection<Class<?>> classes)
     {
@@ -35,8 +35,8 @@ public class ClassExceptionMapperProvider
                 .flatMap(this::decorateEmptyMapper);
     }
 
-    private Optional<ExceptionMapper> decorateEmptyMapper(final CombinedExceptionMapper combinedExceptionMapper)
+    private Optional<ExceptionMapper> decorateEmptyMapper(final ExceptionMapper exceptionMapper)
     {
-        return combinedExceptionMapper.getMappers().isEmpty() ? Optional.empty() : Optional.of(combinedExceptionMapper);
+        return exceptionMapper.isEmpty() ? Optional.empty() : Optional.of(exceptionMapper);
     }
 }
