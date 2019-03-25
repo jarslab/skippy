@@ -8,7 +8,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>skipit-api</module>
-        <module>skipit-core</module>
+        <module>skipit-spi</module>
         <module>skipit-http</module>
     </modules>
 

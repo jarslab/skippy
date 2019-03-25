@@ -12,7 +12,7 @@ public interface CombinedExceptionMapper extends ExceptionMapper
         return getMappers().stream()
                 .filter(exceptionMapper -> exceptionMapper.test(throwable))
                 .findFirst()
-                .orElse(DefaultExceptionMapper.EMPTY_MAPPER)
+                .orElse(ClassExceptionMapperProvider.EMPTY_MAPPER)
                 .apply(throwable);
     }
 

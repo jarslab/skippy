@@ -5,12 +5,10 @@ import io.dropwizard.jersey.errors.LoggingExceptionMapper;
 import org.eclipse.jetty.http.HttpStatus;
 import org.skipta.skipta.api.ErrorDetails;
 import org.skipta.skipta.core.ClassExceptionMapperProvider;
-import org.skipta.skipta.core.DefaultExceptionMapper;
 import org.skipta.skipta.core.ExceptionMapper;
 import org.skipta.skipta.dropwizard.legacy.DropwizardLegacyExceptionMapper;
 import org.skipta.skipta.http.HttpErrorDetails;
 
-import javax.annotation.Nullable;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -31,7 +29,7 @@ public class DropwizardExceptionMapper extends LoggingExceptionMapper<Throwable>
     {
         this.defaultExceptionMapper = registerLegacyMappers ?
                 new DropwizardLegacyExceptionMapper() :
-                DefaultExceptionMapper.EMPTY_MAPPER;
+                ClassExceptionMapperProvider.EMPTY_MAPPER;
         this.classExceptionMapperProvider = checkNotNull(classExceptionMapperProvider);
     }
 
@@ -39,14 +37,15 @@ public class DropwizardExceptionMapper extends LoggingExceptionMapper<Throwable>
     public Response toResponse(final Throwable exception)
     {
         final Method resourceMethod = resourceInfo.getResourceMethod();
-        final ExceptionMapper exceptionMapper = classExceptionMapperProvider.getMapper(resourceMethod)
-                .orElse(defaultExceptionMapper);
+        final ExceptionMapper exceptionMapper = classExceptionMapperProvider.getMapper(resourceMethod);
 
-        final ErrorDetails errorDetails = exceptionMapper.test(exception) ? exceptionMapper.apply(exception) : null;
+        final ErrorDetails errorDetails = exceptionMapper.test(exception) ?
+                exceptionMapper.apply(exception) :
+                defaultExceptionMapper.apply(exception);
         return getResponse(exception, errorDetails);
     }
 
-    private Response getResponse(final Throwable exception, @Nullable final ErrorDetails errorDetails)
+    private Response getResponse(final Throwable exception, final ErrorDetails errorDetails)
     {
         if (errorDetails instanceof ResponseErrorDetails) {
             return ((ResponseErrorDetails) errorDetails).getResponse();
