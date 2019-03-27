@@ -1,13 +1,13 @@
 package com.jarslab.skippy.spi;
 
-import org.junit.Test;
-import com.jarslab.skippy.IllegalStateErrorDetails;
-import com.jarslab.skippy.OverallErrorDetails;
 import com.jarslab.skippy.AcceptThrowableMatcher;
 import com.jarslab.skippy.EmptyErrorDetails;
 import com.jarslab.skippy.ErrorDetails;
 import com.jarslab.skippy.ExceptionMapping;
 import com.jarslab.skippy.ExceptionMappings;
+import com.jarslab.skippy.IllegalStateErrorDetails;
+import com.jarslab.skippy.OverallErrorDetails;
+import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,7 +15,10 @@ public class AnnotatedElementExceptionMapperTest
 {
     private AnnotatedElementExceptionMapper annotatedElementExceptionMapper;
 
-    @ExceptionMapping(exception = IllegalStateException.class, errorDetails = IllegalStateErrorDetails.class)
+    @ExceptionMapping(exception = IllegalStateException.class,
+            errorDetails = IllegalStateErrorDetails.class,
+            strict = true)
+    @ExceptionMapping(exception = RuntimeException.class, errorDetails = OverallErrorDetails.class)
     private class AnnotatedClass
     {
     }
@@ -49,12 +52,27 @@ public class AnnotatedElementExceptionMapperTest
     {
         //given
         annotatedElementExceptionMapper = new AnnotatedElementExceptionMapper(AnnotatedClass.class);
+        final IllegalStateException exception = new IllegalStateException();
         //when
-        final boolean result = annotatedElementExceptionMapper.test(new IllegalStateException());
-        final ErrorDetails errorDetails = annotatedElementExceptionMapper.apply(new IllegalStateException());
+        final boolean result = annotatedElementExceptionMapper.test(exception);
+        final ErrorDetails errorDetails = annotatedElementExceptionMapper.apply(exception);
         //then
         assertThat(result).isTrue();
         assertThat(errorDetails).isInstanceOf(IllegalStateErrorDetails.class);
+    }
+
+    @Test
+    public void shouldMapDescendentThrowable()
+    {
+        //given
+        annotatedElementExceptionMapper = new AnnotatedElementExceptionMapper(AnnotatedClass.class);
+        final IllegalArgumentException exception = new IllegalArgumentException();
+        //when
+        final boolean result = annotatedElementExceptionMapper.test(exception);
+        final ErrorDetails errorDetails = annotatedElementExceptionMapper.apply(exception);
+        //then
+        assertThat(result).isTrue();
+        assertThat(errorDetails).isInstanceOf(OverallErrorDetails.class);
     }
 
     @Test
@@ -62,9 +80,10 @@ public class AnnotatedElementExceptionMapperTest
     {
         //given
         annotatedElementExceptionMapper = new AnnotatedElementExceptionMapper(NotAnnotatedClass.class);
+        final IllegalStateException exception = new IllegalStateException();
         //when
-        final boolean result = annotatedElementExceptionMapper.test(new IllegalStateException());
-        final ErrorDetails errorDetails = annotatedElementExceptionMapper.apply(new IllegalStateException());
+        final boolean result = annotatedElementExceptionMapper.test(exception);
+        final ErrorDetails errorDetails = annotatedElementExceptionMapper.apply(exception);
         //then
         assertThat(result).isFalse();
         assertThat(errorDetails).isInstanceOf(EmptyErrorDetails.class);
@@ -74,10 +93,12 @@ public class AnnotatedElementExceptionMapperTest
     public void shouldMapMethodThrowable() throws NoSuchMethodException
     {
         //given
-        annotatedElementExceptionMapper = new AnnotatedElementExceptionMapper(MethodClass.class.getMethod("annotatedMethod"));
+        annotatedElementExceptionMapper =
+                new AnnotatedElementExceptionMapper(MethodClass.class.getMethod("annotatedMethod"));
+        final IllegalStateException exception = new IllegalStateException();
         //when
-        final boolean result = annotatedElementExceptionMapper.test(new IllegalStateException());
-        final ErrorDetails errorDetails = annotatedElementExceptionMapper.apply(new IllegalStateException());
+        final boolean result = annotatedElementExceptionMapper.test(exception);
+        final ErrorDetails errorDetails = annotatedElementExceptionMapper.apply(exception);
         //then
         assertThat(result).isTrue();
         assertThat(errorDetails).isInstanceOf(IllegalStateErrorDetails.class);
@@ -87,10 +108,12 @@ public class AnnotatedElementExceptionMapperTest
     public void shouldMapToEmptyWhenNotAnnotatedMethod() throws NoSuchMethodException
     {
         //given
-        annotatedElementExceptionMapper = new AnnotatedElementExceptionMapper(MethodClass.class.getMethod("notAnnotatedMethod"));
+        annotatedElementExceptionMapper =
+                new AnnotatedElementExceptionMapper(MethodClass.class.getMethod("notAnnotatedMethod"));
+        final IllegalStateException exception = new IllegalStateException();
         //when
-        final boolean result = annotatedElementExceptionMapper.test(new IllegalStateException());
-        final ErrorDetails errorDetails = annotatedElementExceptionMapper.apply(new IllegalStateException());
+        final boolean result = annotatedElementExceptionMapper.test(exception);
+        final ErrorDetails errorDetails = annotatedElementExceptionMapper.apply(exception);
         //then
         assertThat(result).isFalse();
         assertThat(errorDetails).isInstanceOf(EmptyErrorDetails.class);

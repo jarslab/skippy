@@ -13,6 +13,8 @@ public @interface ExceptionMapping
 {
     Class<? extends Throwable>[] exception() default EmptyException.class;
 
+    boolean strict() default false;
+
     Class<? extends ErrorDetails> errorDetails() default EmptyErrorDetails.class;
 
     Class<? extends ThrowableMatcher> matcher() default RejectThrowableMatcher.class;

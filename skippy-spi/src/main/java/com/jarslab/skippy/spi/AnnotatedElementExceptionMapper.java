@@ -76,7 +76,8 @@ class AnnotatedElementExceptionMapper implements CombinedExceptionMapper
         } else if (matcherDefined) {
             return (ThrowableMatcher) initializeObject(exceptionMapping.matcher());
         } else {
-            return new ExactExceptionMatcher(exceptions);
+            final boolean strict = exceptionMapping.strict();
+            return new ExactExceptionMatcher(strict, exceptions);
         }
     }
 
