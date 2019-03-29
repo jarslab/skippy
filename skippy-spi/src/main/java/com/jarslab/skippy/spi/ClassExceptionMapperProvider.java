@@ -1,13 +1,14 @@
 package com.jarslab.skippy.spi;
 
+import static java.util.Objects.requireNonNull;
+
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static java.util.Objects.requireNonNull;
 
 public class ClassExceptionMapperProvider
 {
@@ -22,7 +23,6 @@ public class ClassExceptionMapperProvider
                 .collect(Collectors.toMap(Function.identity(), AnnotatedElementExceptionMapper::new))
                 .entrySet()
                 .stream()
-                .filter(entry -> !entry.getValue().isEmpty())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         this.methodsMappers = classes.stream()
                 .map(Class::getDeclaredMethods)
@@ -30,7 +30,6 @@ public class ClassExceptionMapperProvider
                 .collect(Collectors.toMap(Function.identity(), AnnotatedElementExceptionMapper::new))
                 .entrySet()
                 .stream()
-                .filter(entry -> !entry.getValue().isEmpty())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
@@ -42,7 +41,9 @@ public class ClassExceptionMapperProvider
     public ExceptionMapper getMapper(final Method method)
     {
         requireNonNull(method);
-        return methodsMappers.getOrDefault(method,
-                classesMapper.getOrDefault(method.getDeclaringClass(), EMPTY_MAPPER));
+        final ExceptionMapper classMapper =
+            classesMapper.getOrDefault(method.getDeclaringClass(), EMPTY_MAPPER);
+        final ExceptionMapper methodMapper = methodsMappers.getOrDefault(method, EMPTY_MAPPER);
+        return (CombinedExceptionMapper) () -> Arrays.asList(methodMapper, classMapper);
     }
 }
