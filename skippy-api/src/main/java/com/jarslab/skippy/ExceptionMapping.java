@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Repeatable(value = ExceptionMappings.class)
 public @interface ExceptionMapping
 {
-    Class<? extends Throwable>[] exception() default EmptyException.class;
+    Class<? extends Throwable>[] exceptions() default EmptyException.class;
 
     boolean strict() default false;
 
@@ -20,6 +20,4 @@ public @interface ExceptionMapping
     Class<? extends ThrowableMatcher> matcher() default RejectThrowableMatcher.class;
 
     Class<? extends ThrowableMapper> mapper() default EmptyThrowableMapper.class;
-
-    abstract class EmptyException extends Throwable {}
 }

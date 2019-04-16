@@ -1,6 +1,7 @@
 package com.jarslab.skippy.spi;
 
 import com.jarslab.skippy.EmptyErrorDetails;
+import com.jarslab.skippy.EmptyException;
 import com.jarslab.skippy.EmptyThrowableMapper;
 import com.jarslab.skippy.ErrorDetails;
 import com.jarslab.skippy.ExceptionMapping;
@@ -10,7 +11,6 @@ import com.jarslab.skippy.ThrowableMatcher;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -18,8 +18,8 @@ import java.util.stream.Stream;
 class AnnotatedElementExceptionMapper implements CombinedExceptionMapper
 {
     private static final String ILLEGAL_MAPPERS_MESSAGE = "Error details can't be defined with mapper.";
-    private static final String ILLEGAL_MATCHERS_MESSAGE = "Exception can't be defined with matcher.";
-    private static final String INITIALIZATION_ERROR_MESSAGE = "Class %s can't be initialized.";
+    private static final String ILLEGAL_MATCHERS_MESSAGE = "Literal exceptions cannot be defined along with matcher.";
+    private static final String INITIALIZATION_ERROR_MESSAGE = "Class %s cannot be instantiated.";
 
     private final List<ExceptionMapper> exceptionMappers;
 
@@ -67,11 +67,10 @@ class AnnotatedElementExceptionMapper implements CombinedExceptionMapper
 
     private ThrowableMatcher createThrowableMatcher(final ExceptionMapping exceptionMapping)
     {
-        final Class<? extends Throwable>[] exceptions = exceptionMapping.exception();
-        final boolean exceptionsDefined = !(exceptions.length == 1 &&
-                Arrays.asList(exceptions).contains(ExceptionMapping.EmptyException.class));
+        final Class<? extends Throwable>[] exceptions = exceptionMapping.exceptions();
+        final boolean defaultExceptionsDefined = !(exceptions.length == 1 && exceptions[0] == EmptyException.class);
         final boolean matcherDefined = exceptionMapping.matcher() != RejectThrowableMatcher.class;
-        if (exceptionsDefined && matcherDefined) {
+        if (defaultExceptionsDefined && matcherDefined) {
             throw new IllegalArgumentException(ILLEGAL_MATCHERS_MESSAGE);
         } else if (matcherDefined) {
             return (ThrowableMatcher) initializeObject(exceptionMapping.matcher());

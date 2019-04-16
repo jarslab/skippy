@@ -12,15 +12,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ClassExceptionMapperProviderTest
 {
-    @ExceptionMapping(exception = IllegalStateException.class, errorDetails = OverallErrorDetails.class)
+    @ExceptionMapping(exceptions = IllegalStateException.class, errorDetails = OverallErrorDetails.class)
     private class SuspiciousClass
     {
-        @ExceptionMapping(exception = IllegalStateException.class, errorDetails = IllegalStateErrorDetails.class)
+        @ExceptionMapping(exceptions = IllegalStateException.class, errorDetails = IllegalStateErrorDetails.class)
         public void annotatedMethod()
         {
         }
 
-        @ExceptionMapping(exception = IllegalArgumentException.class, errorDetails = MessageErrorDetails.class)
+        @ExceptionMapping(exceptions = IllegalArgumentException.class, errorDetails = MessageErrorDetails.class)
         public void messageMethod()
         {
         }

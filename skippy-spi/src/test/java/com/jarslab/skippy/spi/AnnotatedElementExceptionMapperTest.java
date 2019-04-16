@@ -15,10 +15,10 @@ public class AnnotatedElementExceptionMapperTest
 {
     private AnnotatedElementExceptionMapper annotatedElementExceptionMapper;
 
-    @ExceptionMapping(exception = IllegalStateException.class,
+    @ExceptionMapping(exceptions = IllegalStateException.class,
             errorDetails = IllegalStateErrorDetails.class,
             strict = true)
-    @ExceptionMapping(exception = RuntimeException.class, errorDetails = OverallErrorDetails.class)
+    @ExceptionMapping(exceptions = RuntimeException.class, errorDetails = OverallErrorDetails.class)
     private class AnnotatedClass
     {
     }
@@ -29,7 +29,7 @@ public class AnnotatedElementExceptionMapperTest
 
     private class MethodClass
     {
-        @ExceptionMapping(exception = IllegalStateException.class, errorDetails = IllegalStateErrorDetails.class)
+        @ExceptionMapping(exceptions = IllegalStateException.class, errorDetails = IllegalStateErrorDetails.class)
         public void annotatedMethod()
         {
         }
@@ -40,7 +40,7 @@ public class AnnotatedElementExceptionMapperTest
     }
 
     @ExceptionMappings({
-            @ExceptionMapping(exception = IllegalStateException.class, errorDetails = IllegalStateErrorDetails.class),
+            @ExceptionMapping(exceptions = IllegalStateException.class, errorDetails = IllegalStateErrorDetails.class),
             @ExceptionMapping(matcher = AcceptThrowableMatcher.class, errorDetails = OverallErrorDetails.class)
     })
     private class DefaultMappingClass
