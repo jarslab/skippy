@@ -62,7 +62,7 @@ public class AnnotatedElementExceptionMapperTest
     }
 
     @Test
-    public void shouldMapDescendentThrowable()
+    public void shouldMapDescendantThrowable()
     {
         //given
         annotatedElementExceptionMapper = new AnnotatedElementExceptionMapper(AnnotatedClass.class);
