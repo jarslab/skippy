@@ -1,1 +1,1 @@
-# skipta
+# Skippy
