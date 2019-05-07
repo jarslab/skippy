@@ -4,7 +4,7 @@
 
     <groupId>com.jarslab.skippy</groupId>
     <artifactId>skippy</artifactId>
-    <version>1.0-RC</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Skippy Project</name>
