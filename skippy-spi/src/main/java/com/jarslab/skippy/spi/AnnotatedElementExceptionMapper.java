@@ -8,8 +8,8 @@ import com.jarslab.skippy.ExceptionMapping;
 import com.jarslab.skippy.RejectThrowableMatcher;
 import com.jarslab.skippy.ThrowableMapper;
 import com.jarslab.skippy.ThrowableMatcher;
-
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,10 +36,11 @@ class AnnotatedElementExceptionMapper implements CombinedExceptionMapper
 
     private List<ExceptionMapper> createExceptionMappers(final AnnotatedElement annotatedElement)
     {
-        final ExceptionMapping[] exceptionMappings = annotatedElement.getDeclaredAnnotationsByType(ExceptionMapping.class);
+        final ExceptionMapping[] exceptionMappings = annotatedElement
+            .getDeclaredAnnotationsByType(ExceptionMapping.class);
         final Stream<BaseExceptionMapper> baseExceptionMappers = Stream.of(exceptionMappings)
-                .flatMap(Stream::of)
-                .map(this::createExceptionMapper);
+            .flatMap(Stream::of)
+            .map(this::createExceptionMapper);
 
         return Stream.concat(baseExceptionMappers, Stream.empty()).collect(Collectors.toList());
     }
@@ -80,11 +81,14 @@ class AnnotatedElementExceptionMapper implements CombinedExceptionMapper
         }
     }
 
+    @SuppressWarnings("unchecked")
     private Object initializeObject(final Class clazz)
     {
         try {
-            return clazz.getConstructors()[0].newInstance();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            final Constructor declaredConstructor = clazz.getDeclaredConstructor();
+            declaredConstructor.setAccessible(true);
+            return declaredConstructor.newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new IllegalStateException(String.format(INITIALIZATION_ERROR_MESSAGE, clazz));
         }
     }

@@ -1,14 +1,15 @@
 package com.jarslab.skippy.spi;
 
+import static com.jarslab.skippy.spi.ClassExceptionMapperProvider.EMPTY_MAPPER;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.jarslab.skippy.EmptyErrorDetails;
-import com.jarslab.skippy.MessageErrorDetails;
-import org.junit.Test;
-import com.jarslab.skippy.IllegalStateErrorDetails;
-import com.jarslab.skippy.OverallErrorDetails;
 import com.jarslab.skippy.ErrorDetails;
 import com.jarslab.skippy.ExceptionMapping;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import com.jarslab.skippy.IllegalStateErrorDetails;
+import com.jarslab.skippy.MessageErrorDetails;
+import com.jarslab.skippy.OverallErrorDetails;
+import org.junit.Test;
 
 public class ClassExceptionMapperProviderTest
 {
@@ -47,7 +48,7 @@ public class ClassExceptionMapperProviderTest
         final IllegalStateException exception = new IllegalStateException();
         //when
         final ExceptionMapper mapper =
-                classExceptionMapperProvider.getMapper(SuspiciousClass.class.getMethod("notAnnotatedMethod"));
+            classExceptionMapperProvider.getMapper(SuspiciousClass.class.getMethod("notAnnotatedMethod"));
         final boolean test = mapper.test(exception);
         final ErrorDetails errorDetails = mapper.apply(exception);
         //then
@@ -79,7 +80,7 @@ public class ClassExceptionMapperProviderTest
         final IllegalStateException exception = new IllegalStateException();
         //when
         final ExceptionMapper mapper =
-                classExceptionMapperProvider.getMapper(SuspiciousClass.class.getMethod("annotatedMethod"));
+            classExceptionMapperProvider.getMapper(SuspiciousClass.class.getMethod("annotatedMethod"));
         final boolean test = mapper.test(exception);
         final ErrorDetails errorDetails = mapper.apply(exception);
         //then
@@ -94,7 +95,7 @@ public class ClassExceptionMapperProviderTest
         classExceptionMapperProvider = new ClassExceptionMapperProvider(NotAnnotatedClass.class);
         //when
         final ExceptionMapper emptyMapper =
-                classExceptionMapperProvider.getMapper(NotAnnotatedClass.class.getMethod("notAnnotatedMethod"));
+            classExceptionMapperProvider.getMapper(NotAnnotatedClass.class.getMethod("notAnnotatedMethod"));
         //then
         assertThat(emptyMapper.apply(new IllegalStateException()))
             .isInstanceOf(EmptyErrorDetails.class);
@@ -107,9 +108,20 @@ public class ClassExceptionMapperProviderTest
         classExceptionMapperProvider = new ClassExceptionMapperProvider(SuspiciousClass.class);
         //when
         final ExceptionMapper emptyMapper =
-                classExceptionMapperProvider.getMapper(NotAnnotatedClass.class.getMethod("notAnnotatedMethod"));
+            classExceptionMapperProvider.getMapper(NotAnnotatedClass.class.getMethod("notAnnotatedMethod"));
         //then
         assertThat(emptyMapper.apply(new IllegalStateException()))
             .isInstanceOf(EmptyErrorDetails.class);
+    }
+
+    @Test
+    public void shouldReturnEmptyMapperForNullMethod()
+    {
+        //given
+        classExceptionMapperProvider = new ClassExceptionMapperProvider(SuspiciousClass.class);
+        //when
+        final ExceptionMapper mapper = classExceptionMapperProvider.getMapper(null);
+        //then
+        assertThat(mapper).isEqualTo(EMPTY_MAPPER);
     }
 }
