@@ -1,9 +1,9 @@
 package com.jarslab.skippy.spi;
 
+import static java.util.Objects.requireNonNull;
+
 import com.jarslab.skippy.ErrorDetails;
 import com.jarslab.skippy.ThrowableMapper;
-
-import static java.util.Objects.requireNonNull;
 
 public class ExactThrowableMapper implements ThrowableMapper
 {

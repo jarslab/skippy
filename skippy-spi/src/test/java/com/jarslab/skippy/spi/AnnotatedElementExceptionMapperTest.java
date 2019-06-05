@@ -1,5 +1,7 @@
 package com.jarslab.skippy.spi;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.jarslab.skippy.AcceptThrowableMatcher;
 import com.jarslab.skippy.EmptyErrorDetails;
 import com.jarslab.skippy.ErrorDetails;
@@ -9,15 +11,13 @@ import com.jarslab.skippy.IllegalStateErrorDetails;
 import com.jarslab.skippy.OverallErrorDetails;
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 public class AnnotatedElementExceptionMapperTest
 {
     private AnnotatedElementExceptionMapper annotatedElementExceptionMapper;
 
     @ExceptionMapping(exceptions = IllegalStateException.class,
-            errorDetails = IllegalStateErrorDetails.class,
-            strict = true)
+        errorDetails = IllegalStateErrorDetails.class,
+        strict = true)
     @ExceptionMapping(exceptions = RuntimeException.class, errorDetails = OverallErrorDetails.class)
     private class AnnotatedClass
     {
@@ -40,8 +40,8 @@ public class AnnotatedElementExceptionMapperTest
     }
 
     @ExceptionMappings({
-            @ExceptionMapping(exceptions = IllegalStateException.class, errorDetails = IllegalStateErrorDetails.class),
-            @ExceptionMapping(matcher = AcceptThrowableMatcher.class, errorDetails = OverallErrorDetails.class)
+        @ExceptionMapping(exceptions = IllegalStateException.class, errorDetails = IllegalStateErrorDetails.class),
+        @ExceptionMapping(matcher = AcceptThrowableMatcher.class, errorDetails = OverallErrorDetails.class)
     })
     private class DefaultMappingClass
     {
@@ -94,7 +94,7 @@ public class AnnotatedElementExceptionMapperTest
     {
         //given
         annotatedElementExceptionMapper =
-                new AnnotatedElementExceptionMapper(MethodClass.class.getMethod("annotatedMethod"));
+            new AnnotatedElementExceptionMapper(MethodClass.class.getMethod("annotatedMethod"));
         final IllegalStateException exception = new IllegalStateException();
         //when
         final boolean result = annotatedElementExceptionMapper.test(exception);
@@ -109,7 +109,7 @@ public class AnnotatedElementExceptionMapperTest
     {
         //given
         annotatedElementExceptionMapper =
-                new AnnotatedElementExceptionMapper(MethodClass.class.getMethod("notAnnotatedMethod"));
+            new AnnotatedElementExceptionMapper(MethodClass.class.getMethod("notAnnotatedMethod"));
         final IllegalStateException exception = new IllegalStateException();
         //when
         final boolean result = annotatedElementExceptionMapper.test(exception);

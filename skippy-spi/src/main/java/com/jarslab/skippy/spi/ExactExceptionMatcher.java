@@ -1,7 +1,6 @@
 package com.jarslab.skippy.spi;
 
 import com.jarslab.skippy.ThrowableMatcher;
-
 import java.util.Arrays;
 import java.util.List;
 

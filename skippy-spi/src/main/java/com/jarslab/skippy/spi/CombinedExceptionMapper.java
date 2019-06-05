@@ -1,7 +1,6 @@
 package com.jarslab.skippy.spi;
 
 import com.jarslab.skippy.ErrorDetails;
-
 import java.util.List;
 
 public interface CombinedExceptionMapper extends ExceptionMapper
@@ -10,10 +9,10 @@ public interface CombinedExceptionMapper extends ExceptionMapper
     default ErrorDetails apply(final Throwable throwable)
     {
         return getMappers().stream()
-                .filter(exceptionMapper -> exceptionMapper.test(throwable))
-                .findFirst()
-                .orElse(ClassExceptionMapperProvider.EMPTY_MAPPER)
-                .apply(throwable);
+            .filter(exceptionMapper -> exceptionMapper.test(throwable))
+            .findFirst()
+            .orElse(ClassExceptionMapperProvider.EMPTY_MAPPER)
+            .apply(throwable);
     }
 
     @Override

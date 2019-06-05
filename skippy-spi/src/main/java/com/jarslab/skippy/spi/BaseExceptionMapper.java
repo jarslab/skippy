@@ -1,10 +1,10 @@
 package com.jarslab.skippy.spi;
 
+import static java.util.Objects.requireNonNull;
+
 import com.jarslab.skippy.ErrorDetails;
 import com.jarslab.skippy.ThrowableMapper;
 import com.jarslab.skippy.ThrowableMatcher;
-
-import static java.util.Objects.requireNonNull;
 
 class BaseExceptionMapper implements ExceptionMapper
 {

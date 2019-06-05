@@ -1,4 +1,5 @@
 # Foobar
+[![Build Status](https://travis-ci.org/jarslab/skippy.svg?branch=master)](https://travis-ci.org/jarslab/skippy)
 
 Skippy is a Java library for easy exception transforming into detailed messages by annotating
 classes and methods.

@@ -16,10 +16,4 @@ class EmptyExceptionMapper implements ExceptionMapper
     {
         return false;
     }
-
-    @Override
-    public boolean isEmpty()
-    {
-        return true;
-    }
 }
